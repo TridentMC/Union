@@ -1,0 +1,244 @@
+buildscript {
+    ext.kotlin_version = '1.2.21'
+    repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+	id 'net.minecrell.licenser' version '0.3'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
+
+group = "com.elytradev"
+archivesBaseName = "Concrete"
+version = "0.3.8"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+	deploy
+}
+
+dependencies {
+	deploy 'org.apache.maven.wagon:wagon-ssh:2.10'
+	testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+minecraft {
+	version = "1.12.1-14.22.0.2474"
+	mappings = "snapshot_20170908"
+
+	runDir = "eclipse"
+	makeObfSourceJar = false
+}
+
+processResources {
+	// this will ensure that this task is redone when the versions change.
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+
+		// replace version and mcversion
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
+
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+}
+
+jar {
+	baseName = 'concrete-all'
+}
+
+task commonJar(type: Jar) {
+	baseName = 'concrete-common'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/common/**'
+	}
+}
+
+task blockJar(type: Jar) {
+	baseName = 'concrete-block'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/block/**'
+	}
+}
+
+task networkJar(type: Jar) {
+	baseName = 'concrete-network'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/network/**'
+	}
+}
+
+task reflectJar(type: Jar) {
+	baseName = 'concrete-reflect'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/reflect/**'
+	}
+}
+
+task inventoryJar(type: Jar) {
+	baseName = 'concrete-gui'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/inventory/**'
+	}
+}
+
+task recipeJar(type: Jar) {
+	baseName = 'concrete-recipe'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/recipe/**'
+	}
+}
+
+task configJar(type: Jar) {
+	baseName = 'concrete-config'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/config/**'
+	}
+}
+
+task resgenJar(type: Jar) {
+	baseName = 'concrete-resgen'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/resgen/**'
+	}
+}
+
+task utilpacketsJar(type: Jar) {
+	baseName = 'concrete-utilpackets'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/utilpackets/**'
+	}
+}
+
+task rulesengineJar(type: Jar) {
+	baseName = 'concrete-rulesengine'
+	from(sourceSets.main.output) {
+		include 'com/elytradev/concrete/rulesengine/**'
+	}
+}
+
+reobf {
+	commonJar { mappingType = 'SEARGE' }
+	blockJar { mappingType = 'SEARGE' }
+	networkJar { mappingType = 'SEARGE' }
+	reflectJar { mappingType = 'SEARGE' }
+	inventoryJar { mappingType = 'SEARGE' }
+	recipeJar { mappingType = 'SEARGE' }
+	configJar { mappingType = 'SEARGE' }
+	resgenJar { mappingType = 'SEARGE' }
+	utilpacketsJar { mappingType = 'SEARGE'}
+	rulesengineJar { mappingType = 'SEARGE'}
+}
+
+artifacts {
+	archives commonJar, blockJar, networkJar, reflectJar, inventoryJar, recipeJar, configJar, resgenJar, utilpacketsJar, rulesengineJar
+}
+
+publishing {
+	publications {
+		common(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-common'
+			version project.version+'-SNAPSHOT'
+			artifact commonJar
+		}
+		block(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-block'
+			version project.version+'-SNAPSHOT'
+			artifact blockJar
+		}
+		inventory(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-inventory'
+			version project.version+'-SNAPSHOT'
+			artifact inventoryJar
+		}
+		recipe(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-recipe'
+			version project.version+'-SNAPSHOT'
+			artifact recipeJar
+		}
+		network(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-network'
+			version project.version+'-SNAPSHOT'
+			artifact networkJar
+		}
+		resgen(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-resgen'
+			version project.version+'-SNAPSHOT'
+			artifact resgenJar
+		}
+		reflect(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-reflect'
+			version project.version+'-SNAPSHOT'
+			artifact reflectJar
+		}
+		config(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-config'
+			version project.version+'-SNAPSHOT'
+			artifact configJar
+		}
+		utilpackets(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-utilpackets'
+			version project.version+'-SNAPSHOT'
+			artifact utilpacketsJar
+		}
+		rulesengine(MavenPublication) {
+			groupId 'com.elytradev.concrete'
+			artifactId 'concrete-rulesengine'
+			version project.version+'-SNAPSHOT'
+			artifact rulesengineJar
+		}
+	}
+}
+
+if (file('private.gradle').exists()) {
+	apply from: 'private.gradle'
+}
+repositories {
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

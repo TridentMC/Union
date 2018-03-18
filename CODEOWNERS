@@ -1,0 +1,17 @@
+/build.gradle @unascribed @jamierocks
+
+/src/main/java/com/elytradev/concrete/inventory @falkreon
+/src/main/java/com/elytradev/concrete/inventory/ConcreteFluidTank.java @falkreon @CalmBit
+/src/main/java/com/elytradev/concrete/inventory/FluidTankProxySlot.java @falkreon @CalmBit
+/src/main/java/com/elytradev/concrete/inventory/IObservableFluidTank.java @falkreon @CalmBit
+/src/main/java/com/elytradev/concrete/inventory/ValidatedFluidTankWrapper.java @falkreon @CalmBit
+/src/main/java/com/elytradev/concrete/inventory/gui/widget/WFluidBar.java @falkreon @CalmBit
+
+/src/main/java/com/elytradev/concrete/recipe @falkreon
+
+/src/main/java/com/elytradev/concrete/block @jamierocks
+/src/main/java/com/elytradev/concrete/config @darkevilmac
+/src/main/java/com/elytradev/concrete/network @unascribed
+/src/main/java/com/elytradev/concrete/reflect @unascribed
+/src/main/java/com/elytradev/concrete/resgen @darkevilmac
+
