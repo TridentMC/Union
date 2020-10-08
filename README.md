@@ -1,7 +1,9 @@
 <img src="https://rawgit.com/elytra/Concrete/1.12.1/doc/emblem.svg" align="right" width="180px"/>
 
-# Concrete
-*A solid foundation for Elytra mods.*
+# Union
+*Like Concrete, but not used anymore. *
+
+Union is a (now unmaintained) fork of Concrete.
 
 Concrete is a varied set of useful *stuff* that is designed to be shaded into a
 mod's jar, meaning it's not a runtime dependency and is rather included in the
